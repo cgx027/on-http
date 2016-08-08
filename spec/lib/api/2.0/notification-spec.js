@@ -6,8 +6,12 @@ describe('Http.Api.Notification', function () {
     var notificationApiService;
 
     var notificationMessage = {
-        taskId: '1234abcd5678effe9012dcba',
-        data: 'dummy data'
+        type: 'task',
+        id: '73b8ca01-735b-40d6-897a-7003ef2fa988',
+        data: {
+            status: 'completed',
+            message: 'dummy message',
+        }
     };
 
     before('start HTTP server', function () {
@@ -17,7 +21,7 @@ describe('Http.Api.Notification', function () {
 
     beforeEach('set up mocks', function () {
         notificationApiService = helper.injector.get('Http.Services.Api.Notification');
-        sinon.stub(notificationApiService, 'postNotification').resolves(notificationMessage);
+        sinon.stub(notificationApiService, 'postTaskNotification').resolves(notificationMessage);
     });
 
     afterEach('teardown mocks', function () {
@@ -38,17 +42,13 @@ describe('Http.Api.Notification', function () {
     describe('POST /notification', function () {
         it('should return notification detail', function () {
             return helper.request()
-            .post(
-                '/api/2.0/notification?taskId='
-                + notificationMessage.taskId 
-                + '&data='
-                + notificationMessage.data)
-            .set('Content-Type', 'application/json')
+            .post('/api/2.0/notification')
+            .send(notificationMessage)
             .expect('Content-Type', /^application\/json/)
             .expect(201, notificationMessage)
             .then(function () {
-                expect(notificationApiService.postNotification).to.have.been.calledOnce;
-                expect(notificationApiService.postNotification).to.have.been.calledWith(notificationMessage);
+                expect(notificationApiService.postTaskNotification).to.have.been.calledOnce;
+                expect(notificationApiService.postTaskNotification).to.have.been.calledWith(notificationMessage);
             });
         });
     });
