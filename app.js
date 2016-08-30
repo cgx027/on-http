@@ -5,6 +5,8 @@
 
 var di = require('di');
 
+intended_error = true;
+
 module.exports = Runner;
 
 di.annotate(Runner, new di.Provide('app'));
