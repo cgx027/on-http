@@ -7,6 +7,12 @@ var di = require('di');
 
 intended_error = true;
 
+var var_not_in_use = true;
+
+var i = 0;
+i++;
+
+
 module.exports = Runner;
 
 di.annotate(Runner, new di.Provide('app'));
@@ -64,9 +70,7 @@ function Runner(
                 }
             })
             .then(function() {
-                var endpoints = configuration.get('httpEndpoints', [{port: 8080}]);
-                services = Promise.map(endpoints, function(endpoint) {
-                    return new HttpService(endpoint);
+                var endpoints = configuration.get('httpEndpoints', [{port: 8080}]);services = Promise.map(endpoints, function(endpoint) {return new HttpService(endpoint);
                 }).each(function(service) {
                     return service.createSwagger().then(function() {
                         return service.start();
